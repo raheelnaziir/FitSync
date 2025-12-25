@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:provider/provider.dart';
 import '../services/api_service.dart';
 import '../models/workout.dart';
+import '../providers/auth_provider.dart';
 
 class ProgressScreen extends StatefulWidget {
   @override
@@ -12,6 +14,34 @@ class _ProgressScreenState extends State<ProgressScreen> {
   List<Workout> workouts = [];
   bool loading = true;
 
+  // Demo data
+  final List<Workout> demoWorkouts = [
+    Workout(
+      id: '1',
+      title: 'Chest & Triceps',
+      exercises: ['Push-ups', 'Bench Press', 'Tricep Dips'],
+      date: DateTime.now().subtract(Duration(days: 3)),
+    ),
+    Workout(
+      id: '2',
+      title: 'Back & Biceps',
+      exercises: ['Pull-ups', 'Barbell Rows', 'Curls'],
+      date: DateTime.now().subtract(Duration(days: 2)),
+    ),
+    Workout(
+      id: '3',
+      title: 'Legs',
+      exercises: ['Squats', 'Lunges', 'Leg Press'],
+      date: DateTime.now().subtract(Duration(days: 1)),
+    ),
+    Workout(
+      id: '4',
+      title: 'Cardio Session',
+      exercises: ['Running', 'Jump Rope', 'Burpees'],
+      date: DateTime.now(),
+    ),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -21,6 +51,19 @@ class _ProgressScreenState extends State<ProgressScreen> {
   Future<void> fetchWorkouts() async {
     setState(() { loading = true; });
     try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      
+      // If demo mode, use sample data
+      if (authProvider.isDemoMode) {
+        await Future.delayed(Duration(milliseconds: 500)); // Simulate delay
+        if (!mounted) return;
+        setState(() {
+          workouts = demoWorkouts;
+          loading = false;
+        });
+        return;
+      }
+      
       final res = await WorkoutService.getWorkouts();
       if (!mounted) return;
       setState(() {

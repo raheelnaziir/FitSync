@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:provider/provider.dart';
 import '../services/api_service.dart';
 import '../models/workout.dart';
+import '../providers/auth_provider.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -15,6 +17,34 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
+  // Demo data
+  final List<Workout> demoWorkouts = [
+    Workout(
+      id: '1',
+      title: 'Chest & Triceps',
+      exercises: ['Push-ups', 'Bench Press', 'Tricep Dips'],
+      date: DateTime.now().subtract(Duration(days: 3)),
+    ),
+    Workout(
+      id: '2',
+      title: 'Back & Biceps',
+      exercises: ['Pull-ups', 'Barbell Rows', 'Curls'],
+      date: DateTime.now().subtract(Duration(days: 2)),
+    ),
+    Workout(
+      id: '3',
+      title: 'Legs',
+      exercises: ['Squats', 'Lunges', 'Leg Press'],
+      date: DateTime.now().subtract(Duration(days: 1)),
+    ),
+    Workout(
+      id: '4',
+      title: 'Cardio Session',
+      exercises: ['Running', 'Jump Rope', 'Burpees'],
+      date: DateTime.now(),
+    ),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -23,7 +53,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Future<void> fetchWorkouts() async {
     try {
-      workouts = await WorkoutService.getWorkouts();
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      
+      // If demo mode, use sample data
+      if (authProvider.isDemoMode) {
+        await Future.delayed(Duration(milliseconds: 500)); // Simulate delay
+        workouts = demoWorkouts;
+      } else {
+        workouts = await WorkoutService.getWorkouts();
+      }
+      
       if (!mounted) return;
       workoutEvents = {};
       for (var w in workouts) {

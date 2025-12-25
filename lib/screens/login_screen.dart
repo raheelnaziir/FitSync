@@ -186,6 +186,51 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   SizedBox(height: 16),
+                  // Demo Credentials Hint
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF6C5CE7).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Color(0xFF6C5CE7).withOpacity(0.3)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Demo Credentials (No WiFi Needed)',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF6C5CE7),
+                          ),
+                        ),
+                        SizedBox(height: 6),
+                        Row(
+                          children: [
+                            Icon(Icons.mail_outline, size: 14, color: Color(0xFF6C5CE7)),
+                            SizedBox(width: 6),
+                            Text(
+                              'user@demo.com',
+                              style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(Icons.lock_outline, size: 14, color: Color(0xFF6C5CE7)),
+                            SizedBox(width: 6),
+                            Text(
+                              'demo123',
+                              style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16),
                   // Remember Me & Forgot Password
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -253,6 +298,36 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Colors.white,
                               ),
                             ),
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  // Demo Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                        authProvider.demoLogin();
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (_) => HomeScreen()),
+                        );
+                      },
+                      icon: Icon(Icons.play_circle_outline, color: Color(0xFF6C5CE7)),
+                      label: Text(
+                        'Try Demo (Offline)',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF6C5CE7),
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                        side: BorderSide(color: Color(0xFF6C5CE7), width: 2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 24),
